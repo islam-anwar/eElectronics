@@ -43,7 +43,7 @@ public class DaoMVC {
 		return i;
 	}
 
-	private static Connection getConnection() {
+	public static Connection getConnection() {
 		String connectionUrl = "jdbc:mysql://localhost:3306/eElectronics";
 		Connection connection = null;
 		

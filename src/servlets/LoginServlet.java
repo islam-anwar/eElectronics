@@ -48,11 +48,16 @@ public class LoginServlet extends HttpServlet {
 			m.setPassword(password);
 			
 			String sql = "select * from eElectronics.users where username=? and password=?";
+			String adminSQL="select * from eelectronics.admin where username=? and password=?";
 			
 			//3. Call a method in DAO to select data from table
 			HttpSession session = request.getSession();
 			
 			ResultSet rs = DaoMVC.loginUser(m,sql);
+			ResultSet adminResult=DaoMVC.loginUser(m, adminSQL);
+			
+			
+			
 			 System.out.println("islam");
 		
 			try {
@@ -67,6 +72,7 @@ public class LoginServlet extends HttpServlet {
 					session.setAttribute("home", rs.getString(10));
 					session.setAttribute("gender", rs.getString(9));
 					session.setAttribute("balance", rs.getDouble(8));
+					session.setAttribute("logedin", "user");
 					
 					
 					
@@ -75,8 +81,20 @@ public class LoginServlet extends HttpServlet {
 				
 					
 				
-				}
-				else {
+				}else if(adminResult.next()){
+				
+					
+					System.out.println("admin");
+					
+					session.setAttribute("logedin", "admin");
+					session.setAttribute("adminName", uname);
+					
+					
+					
+					getServletContext().getRequestDispatcher("/index.jsp").forward(request, response);
+					
+				}else{
+				
 					getServletContext().getRequestDispatcher("/Login.jsp").forward(request, response);
 				}
 			} catch (SQLException e) {

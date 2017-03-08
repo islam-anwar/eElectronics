@@ -5,6 +5,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashSet;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -13,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import Entites.Order;
+import Entites.ProductCount;
 
 /**
  * Servlet implementation class AddToCartServlet
@@ -22,7 +24,8 @@ public class AddToCartServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
 	HashSet<String>productsIdHashSet;
-	ArrayList<Order>orderCartlist;
+	ArrayList<ProductCount>productContList;
+	
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -41,28 +44,29 @@ public class AddToCartServlet extends HttpServlet {
 		HttpSession session=request.getSession();
 		PrintWriter out=response.getWriter();
 		productsIdHashSet=new HashSet<String>();
-		//orderCartlist=new ArrayList<Order>();
+		productContList=new ArrayList<ProductCount>();
 		
-		
+		try{
 		
 		if(session.getAttribute("productsIdHashSet")==null){
 			
 			HashSet<String> set=new HashSet<String>();
 			set.add(productId);
 			session.setAttribute("productsIdHashSet",set);
-			Order order=new Order();
-			order.setUserId((int)session.getAttribute("usercode"));
-			order.setProductId(Integer.parseInt(productId));
-			ArrayList<Order> list=new ArrayList<Order>();
-			list.add(order);
-			session.setAttribute("orderCartlist", list);
+			ProductCount pc=new ProductCount();
+			pc.setProductId(Integer.parseInt(productId));
+			pc.setProductCount(1);
+			productContList.add(pc);
+			session.setAttribute("productCountList", productContList);
+			
 			
 			
 			
 		
 		}
 		productsIdHashSet=(HashSet<String>)session.getAttribute("productsIdHashSet");
-		orderCartlist=(ArrayList<Order>)session.getAttribute("orderCartlist");
+		productContList=(ArrayList<ProductCount>)session.getAttribute("productCountList");
+		
 		
 		
 		if(productsIdHashSet.contains(productId)){
@@ -81,19 +85,28 @@ public class AddToCartServlet extends HttpServlet {
 		session.removeAttribute("productsIdHashSet");
 		session.setAttribute("productsIdHashSet", productsIdHashSet);
 		
-		Order order=new Order();
-		order.setUserId((int)session.getAttribute("usercode"));
-		order.setProductId(Integer.parseInt(productId));
-		orderCartlist.add(order);
-		session.removeAttribute("orderCartlist");
-		session.setAttribute("orderCartlist", orderCartlist);
+		ProductCount pc=new ProductCount();
+		pc.setProductCount(1);
+		pc.setProductId(Integer.parseInt(productId));
+		productContList.add(pc);
+		session.removeAttribute("productCountList");
+		session.setAttribute("productCountList", productContList);
+		
+		
+		
 		
 		
 		
 	
-		response.sendRedirect(request.getContextPath());
+		 response.sendRedirect(request.getContextPath());
 		
 	}
+		}catch (Exception e) {
+			e.printStackTrace();
+			RequestDispatcher dispatch = request
+					.getRequestDispatcher("error.jsp");
+			dispatch.forward(request, response);
+		}
 		
 		
 	}
