@@ -123,11 +123,17 @@
                     <div class="user-menu">
                         <ul>
                             
-                            <li><a href="#"><i class="fa fa-heart"></i> Wishlist</a></li>
-                            <li><a href="cart.jsp"><i class="fa fa-user"></i> My Cart</a></li>
-                            <li><a href="checkout.jsp"><i class="fa fa-user"></i> Checkout</a></li>
-                            <li><a href="login.jsp"><i class="fa fa-user"></i> Login</a></li>
-                            <li><a href="Registeration.html" ><i class="fa fa-user"></i> Register</a></li>
+                           <%if(session.getAttribute("logedin")!=null){
+							%>
+						
+							<li><a href="EditProfile.jsp"><i class="fa fa-user"></i> My Account</a></li>
+							
+							<li><a href="cart.jsp"><i class="fa fa-user"></i> My
+									Cart</a></li>
+							<li><a href="checkout.jsp"><i class="fa fa-user"></i>
+									Checkout</a></li>
+									<%} %>
+							<li><a href="#"><i class="fa fa-user"></i> Login</a></li>
                         </ul>
                     </div>
                 </div>
@@ -188,8 +194,7 @@
                         <li><a href="index.jsp">Home</a></li>
                         <li><a href="shop.jsp">Shop page</a></li>
                         
-                        <li><a href="cart.jsp">Cart</a></li>
-                        <li><a href="checkout.jsp">Checkout</a></li>
+                        
                         
                         <li><a href="Registeration.html">Registeration</a></li>
                         <li class="active"><a href="login.jsp">Login</a></li>

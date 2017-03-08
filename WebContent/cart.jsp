@@ -52,14 +52,17 @@
 				<div class="col-md-8">
 					<div class="user-menu">
 						<ul>
-							<li><a href="EditProfile.jsp"><i class="fa fa-user"></i>
-									My Account</a></li>
-							<li><a href="#"><i class="fa fa-heart"></i> Wishlist</a></li>
+							<%if(session.getAttribute("logedin")!=null){
+							%>
+						
+							<li><a href="EditProfile.jsp"><i class="fa fa-user"></i> My Account</a></li>
+							
 							<li><a href="cart.jsp"><i class="fa fa-user"></i> My
 									Cart</a></li>
 							<li><a href="checkout.jsp"><i class="fa fa-user"></i>
 									Checkout</a></li>
-							<li><a href="Login.jsp"><i class="fa fa-user"></i> Login</a></li>
+									<%} %>
+							<li><a href="#"><i class="fa fa-user"></i> Login</a></li>
 						</ul>
 					</div>
 				</div>
@@ -168,8 +171,7 @@
 									}
 								%>
 							</ul></li>
-						<li><a href="Registeration.html">Registeration</a></li>
-						<li><a href="Login.jsp">Login</a></li>
+					
 					</ul>
 				</div>
 			</div>
@@ -200,7 +202,7 @@
 				<div class="col-md-8">
 					<div class="product-content-right">
 						<div class="woocommerce">
-							<form method="post" action="#">
+							<form method="post" action="http://localhost:8080/eElectronics/UpdateCart">
 								<table cellspacing="0" class="shop_table cart">
 									<thead>
 										<tr>
@@ -214,20 +216,28 @@
 										</tr>
 									</thead>
 									<tbody>
-										<%
+										<%double total=0;
 											try {
 												int i=1;
+												
+												
+												ArrayList<ProductCount> pContList=(ArrayList<ProductCount>)session
+														.getAttribute("productCountList");
+												
 
 												ArrayList<Product> productsList = (ArrayList<Product>) session
 														.getAttribute("ProductsList");
-												ArrayList<Order>orderCartList=(ArrayList<Order>)session.getAttribute("orderCartlist");
+												
 
 												HashSet<String> productIdHaseSet = (HashSet<String>) session
 														.getAttribute("productsIdHashSet");
+												Iterator pCListIterator=pContList.iterator();
 												Iterator productIdSetIterator = productIdHaseSet.iterator();
 
-												while (productIdSetIterator.hasNext()) {
+												while (productIdSetIterator.hasNext()&&pCListIterator.hasNext()) {
 													
+													ProductCount pCount=(ProductCount)pCListIterator.next();
+													int count=pCount.getProductCount();
 													String pId=(String)productIdSetIterator.next();
 													int productId = Integer.parseInt(pId);
 													//Iterator orderCartItertor=orderCartList.iterator();
@@ -241,6 +251,7 @@
 
 														Product p = (Product) productItrator.next();
 														if (p.getId() == productId) {
+															total+=(p.getProductPrice())*count;
 										%>
 										<tr class="cart_item">
 											<td class="product-remove"><a title="Remove this item"
@@ -260,20 +271,22 @@
 												<div class="quantity buttons_added">
 													<input type="button" class="minus" value="-"> <input
 														type="number" size="4" class="input-text qty text"
-														title="Qty" value="1" min="0" step="1"> <input
+														title="Qty" value="<%=count %>" min="0" step="1" max="<%=p.getQuantity() %>" name="quantity"> <input
 														type="button" class="plus" value="+">
 												</div>
 											</td>
 
-											<td   class="product-subtotal"><span class="amount"><%=p.getProductPrice() %></span>
+											<td   class="product-subtotal"><span class="amount"><%=p.getProductPrice()*count %></span>
 											</td>
-											<td>delete</td>
+											<td><a href="http://localhost:8080/eElectronics/DeleteItemServlet?productId=<%=p.getId()%>">DELETE</a></td>
 										</tr>
 
 										<%
 											}
 													}
 												}
+												
+												session.setAttribute("totalPrice", total);
 												
 											} catch (Exception e) {
 
@@ -299,7 +312,7 @@
 											<td class="actions" colspan="4">
 
 												<div class="cart-collaterals" id="total">
-													<h2>8000</h2>
+													<h2><%=total %></h2>
 
 												</div>
 
@@ -311,9 +324,17 @@
 
 									</tbody>
 								</table>
-								<input type="submit" value="Update Cart" name="update_cart"
-									class="button"> <input type="submit" value="CheackOut"
-									name="update_cart" class="button">
+								<div class="product-option-shop">
+								
+								<input type="submit" value="Udate Cart" class="add_to_cart_button">
+							
+						</div>
+							<div class="product-option-shop">
+							<a class="add_to_cart_button" data-quantity="1"
+								data-product_sku="" 
+								rel="nofollow"
+								href="http://localhost:8080/eElectronics/CheckOutServlet"> CheckOut</a>
+						</div>
 
 
 							</form>

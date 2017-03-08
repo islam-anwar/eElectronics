@@ -55,13 +55,17 @@
 				<div class="col-md-8">
 					<div class="user-menu">
 						<ul>
+							<%if(session.getAttribute("logedin")!=null){
+							%>
+						
 							<li><a href="EditProfile.jsp"><i class="fa fa-user"></i> My Account</a></li>
-							<li><a href="#"><i class="fa fa-heart"></i> Wishlist</a></li>
+							
 							<li><a href="cart.jsp"><i class="fa fa-user"></i> My
 									Cart</a></li>
 							<li><a href="checkout.jsp"><i class="fa fa-user"></i>
 									Checkout</a></li>
-							<li><a href="Login.jsp"><i class="fa fa-user"></i> Login</a></li>
+									<%} %>
+							<li><a href="#"><i class="fa fa-user"></i> Login</a></li>
 						</ul>
 					</div>
 				</div>
@@ -134,8 +138,16 @@
 						<li><a href="index-2.jsp">Home</a></li>
 						<li><a href="shop.jsp">Shop page</a></li>
 						
+						<%if(session.getAttribute("logedin")!=null)
+						{
+							if(session.getAttribute("logedin").equals("user"))
+							{
+							%>
+
 						<li><a href="cart.jsp">Cart</a></li>
 						<li><a href="checkout.jsp">Checkout</a></li>
+						<%}
+							}%>
 						<%
 							try {
 								
@@ -173,8 +185,7 @@
 							
 							
 							%>
-						<li ><a href="Registeration.html">Registeration</a></li>
-						<li><a href="Login.jsp">Login</a></li>
+						
 					</ul>
 				</div>
 			</div>
@@ -247,11 +258,25 @@
 										
 									</div>
 
-									<form action="#" class="cart">
-
-										<button class="add_to_cart_button" type="submit">Add
-											to cart</button>
-									</form>
+									<div class="product-option-shop">
+									
+									<%if(session.getAttribute("logedin")!=null){
+										
+										if(session.getAttribute("logedin").equals("user"))
+										{
+										
+										
+										
+										%>
+							<a class="add_to_cart_button" data-quantity="1"
+								data-product_sku="" data-product_id="<%=p.getId()%>"
+								rel="nofollow"
+								href="http://localhost:8080/eElectronics/AddToCartServlet?productId=<%=p.getId()%>">Add
+								to cart</a>
+								<%
+								}
+								}%>
+						</div>
 
 
 

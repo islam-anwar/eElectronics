@@ -56,13 +56,21 @@
 				<div class="col-md-8">
 					<div class="user-menu">
 						<ul>
-							<li><a href="EditProfile.jsp"><i class="fa fa-user"></i> My Account</a></li>
-							<li><a href="#"><i class="fa fa-heart"></i> Wishlist</a></li>
+							<%
+								if (session.getAttribute("logedin") != null) {
+							%>
+
+							<li><a href="EditProfile.jsp"><i class="fa fa-user"></i>
+									My Account</a></li>
+
 							<li><a href="cart.jsp"><i class="fa fa-user"></i> My
 									Cart</a></li>
 							<li><a href="checkout.jsp"><i class="fa fa-user"></i>
 									Checkout</a></li>
-							<li><a href="Login.jsp"><i class="fa fa-user"></i> Login</a></li>
+							<%
+								}
+							%>
+							<li><a href="#"><i class="fa fa-user"></i> Login</a></li>
 						</ul>
 					</div>
 				</div>
@@ -138,6 +146,8 @@
 							try {
 								String productCategory = request
 										.getParameter("productCategory");
+								String productSearch=request.getParameter("search");
+								//System.out.println(productSearch);
 
 								HttpSession session1 = request.getSession();
 								HashSet<String> categoriesList = (HashSet<String>) session1
@@ -148,8 +158,18 @@
 						<li><a href="index-2.jsp">Home</a></li>
 						<li class="active"><a href="shop.jsp">Shop page</a></li>
 
+
+						<%
+							if (session.getAttribute("logedin") != null) {
+									if (session.getAttribute("logedin").equals("user")) {
+						%>
+
 						<li><a href="cart.jsp">Cart</a></li>
 						<li><a href="checkout.jsp">Checkout</a></li>
+						<%
+							}
+								}
+						%>
 						<li class="dropdown dropdown-small"><a data-toggle="dropdown"
 							data-hover="dropdown" class="dropdown-toggle" href="#"><span
 								class="key">Category<b class="caret"></b></a>
@@ -165,8 +185,14 @@
 									}
 								%>
 							</ul></li>
-						<li ><a href="Registeration.html">Registeration</a></li>
+						<%
+							if (session.getAttribute("logedin") == null) {
+						%>
+						<li><a href="Registeration.html">Registeration</a></li>
 						<li><a href="Login.jsp">Login</a></li>
+						<%
+							}
+						%>
 					</ul>
 				</div>
 			</div>
@@ -185,6 +211,14 @@
 			</div>
 		</div>
 	</div>
+	
+	<div align="center" style="padding-top: 30px">
+                        <h2 class="sidebar-title">Search Products</h2>
+                        <form action="shop.jsp">
+                            <input type="text" placeholder="Search products..." width="150px" name="search">
+                            <input type="submit" value="Search">
+                        </form>
+                    </div>
 
 
 	<div class="single-product-area">
@@ -208,7 +242,7 @@
 						<div class="product-upper">
 
 
-							<img src="<%=p.getProductImage() %>" alt="">
+							<img src="<%=p.getProductImage()%>" alt="">
 
 						</div>
 						<h2>
@@ -220,11 +254,22 @@
 						</div>
 
 						<div class="product-option-shop">
+							<%
+								if (session.getAttribute("logedin") != null) {
+
+													if (session.getAttribute("logedin").equals(
+															"user")) {
+							%>
 							<a class="add_to_cart_button" data-quantity="1"
 								data-product_sku="" data-product_id="<%=p.getId()%>"
 								rel="nofollow"
-								href="http://demos.wpexpand.com/canvas/shop/?productId=<%=p.getId()%>">Add
+								href="http://localhost:8080/eElectronics/AddToCartServlet?productId=<%=p.getId()%>">Add
 								to cart</a>
+
+							<%
+								}
+												}
+							%>
 						</div>
 					</div>
 				</div>
@@ -233,20 +278,21 @@
 				<%
 					}
 							}
-						} else {
+						}else if (productSearch != null) {
 
 							while (iterator.hasNext()) {
 								Product p = (Product) iterator.next();
-				%>
-
-
-				<div class="col-md-3 col-sm-6">
+								if (p.getCategory().equals(productSearch)||p.getProductName().equals(productSearch)) {
+									
+									
+									%>
+									
+									<div class="col-md-3 col-sm-6">
 					<div class="single-shop-product">
 						<div class="product-upper">
 
 
-
-							<img src="<%=p.getProductImage() %> " alt="">
+							<img src="<%=p.getProductImage()%>" alt="">
 
 						</div>
 						<h2>
@@ -258,11 +304,76 @@
 						</div>
 
 						<div class="product-option-shop">
+							<%
+								if (session.getAttribute("logedin") != null) {
+
+													if (session.getAttribute("logedin").equals(
+															"user")) {
+							%>
 							<a class="add_to_cart_button" data-quantity="1"
 								data-product_sku="" data-product_id="<%=p.getId()%>"
 								rel="nofollow"
 								href="http://localhost:8080/eElectronics/AddToCartServlet?productId=<%=p.getId()%>">Add
 								to cart</a>
+
+							<%
+								}
+												}
+							%>
+						</div>
+					</div>
+				</div>
+
+									
+									
+									
+									<% 
+									
+								}
+								}
+								}else{ 
+								while (iterator.hasNext()) {
+								Product p = (Product) iterator.next();%>
+						
+						
+						
+					
+
+
+				<div class="col-md-3 col-sm-6">
+					<div class="single-shop-product">
+						<div class="product-upper">
+
+
+
+							<img src="<%=p.getProductImage()%> " alt="">
+
+						</div>
+						<h2>
+							<a href="single-product.jsp?productId=<%=p.getId()%>"><%=p.getProductName()%></a>
+						</h2>
+						<div class="product-carousel-price">
+							<ins><%=p.getProductPrice()%></ins>
+
+						</div>
+
+						<div class="product-option-shop">
+							<%
+								if (session.getAttribute("logedin") != null) {
+
+													if (session.getAttribute("logedin").equals(
+															"user")) {
+							%>
+							<a class="add_to_cart_button" data-quantity="1"
+								data-product_sku="" data-product_id="<%=p.getId()%>"
+								rel="nofollow"
+								href="http://localhost:8080/eElectronics/AddToCartServlet?productId=<%=p.getId()%>">Add
+								to cart</a>
+
+							<%
+								}
+												}
+							%>
 						</div>
 					</div>
 				</div>
@@ -281,33 +392,33 @@
 					}
 				%>
 
-				
+
 			</div>
 			<div class="row">
-					<div class="col-md-12 col-lg-12 co-sm-12">
-						<div class="product-pagination text-center">
-							<nav>
-								<ul class="pagination">
-									<li><a href="#" aria-label="Previous"> <span
-											aria-hidden="true">&laquo;</span>
-									</a></li>
-									<li><a href="#">1</a></li>
-									<li><a href="#">2</a></li>
-									<li><a href="#">3</a></li>
-									<li><a href="#">4</a></li>
-									<li><a href="#">5</a></li>
-									<li><a href="#" aria-label="Next"> <span
-											aria-hidden="true">&raquo;</span>
-									</a></li>
+				<div class="col-md-12 col-lg-12 co-sm-12">
+					<div class="product-pagination text-center">
+						<nav>
+							<ul class="pagination">
+								<li><a href="#" aria-label="Previous"> <span
+										aria-hidden="true">&laquo;</span>
+								</a></li>
+								<li><a href="#">1</a></li>
+								<li><a href="#">2</a></li>
+								<li><a href="#">3</a></li>
+								<li><a href="#">4</a></li>
+								<li><a href="#">5</a></li>
+								<li><a href="#" aria-label="Next"> <span
+										aria-hidden="true">&raquo;</span>
+								</a></li>
 
-								</ul>
+							</ul>
 
-							</nav>
-
-						</div>
+						</nav>
 
 					</div>
+
 				</div>
+			</div>
 
 		</div>
 	</div>
